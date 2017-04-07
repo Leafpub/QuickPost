@@ -1,0 +1,58 @@
+<div class="grid-stack-item"
+    {{#if x}}data-gs-x="{{x}}" data-gs-y="{{y}}"
+    data-gs-width="{{width}}" data-gs-height="{{height}}"{{/if}} id="{{id}}">
+    <div class="grid-stack-item-content card">
+        <div class="card-block">
+            <h4 class="card-title">Quick Post</h4>
+                <p class="card-text">
+                    <form>
+                        <div class="form-group">
+                            <label for="title">Post Title</label>
+                            <input type="text" id="title" name="title" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Post Content</label>
+                            <textarea name="content" id="content" class="form-control"> </textarea>
+                        </div>
+                        <div class="pull-right mb-3">
+                            <a href="#" class="mr-2 btn-outline-warning savePost" data-status="draft" role="button">Save as Draft</a>
+                            <a href="#" class="btn btn-md btn-outline-success savePost" data-status="published" role="button">Publish</a>
+                        </div>
+                    </form>
+                </p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('.savePost').on('click', function(){
+                var status = $(this).attr('data-status'),
+                    title = $('#title').val(),
+                    content = $('#content').val(),
+                    post = {}
+                
+                if (title === '' || content === '') return;
+
+                post = {
+                    title: title,
+                    content: content,
+                    slug: Leafpub.slug(title),
+                    status: status,
+                    author: '=quick='
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: Leafpub.url('api/posts'),
+                    data: {properties: post}
+                })
+                .done(function(res){
+                    console.log(res);
+                })
+                .always(function(){
+
+                })
+                console.log(post);
+            });
+        });
+    </script>
+</div>
